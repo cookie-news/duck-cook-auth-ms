@@ -1,0 +1,86 @@
+definitions:
+  entity.Credentials:
+    properties:
+      cpf:
+        type: string
+      pass:
+        format: string
+        type: string
+    type: object
+  entity.Customer:
+    properties:
+      email:
+        example: usuario@host.com
+        type: string
+      id:
+        example: "1"
+        format: string
+        type: string
+      user:
+        example: paulo
+        type: string
+    type: object
+  entity.CustomerInput:
+    properties:
+      email:
+        example: usuario@host.com
+        type: string
+      id:
+        example: "1"
+        format: string
+        type: string
+      pass:
+        format: string
+        type: string
+      user:
+        example: paulo
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Cria um JWT para o cliente
+      parameters:
+      - description: Dados do Cliente
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/entity.Credentials'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entity.Customer'
+      summary: Login cliente
+      tags:
+      - auth
+  /customer:
+    post:
+      consumes:
+      - application/json
+      description: Adicionar um novo cliente
+      parameters:
+      - description: Dados do Cliente
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/entity.CustomerInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entity.Customer'
+      summary: Adicionar novo cliente
+      tags:
+      - customer
+swagger: "2.0"

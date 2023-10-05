@@ -1,0 +1,8 @@
+*.env
+
+// files tmp create by golang in test
+cover/
+coverage.out
+
+// file debug created in visual studio
+*debug*
