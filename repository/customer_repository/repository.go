@@ -33,7 +33,7 @@ func (repo repositoryImpl) GetCustomerByUser(user string) (customer entity.Custo
 }
 
 func (repo repositoryImpl) CreateCustomer(customer entity.CustomerInput) (entity.Customer, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
 	defer cancel()
 
 	var customerModel Customer
