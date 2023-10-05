@@ -1,9 +1,10 @@
 definitions:
   entity.Credentials:
     properties:
-      cpf:
-        type: string
       pass:
+        format: string
+        type: string
+      user:
         format: string
         type: string
     type: object

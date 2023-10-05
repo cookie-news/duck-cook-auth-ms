@@ -88,10 +88,11 @@ const docTemplate = `{
         "entity.Credentials": {
             "type": "object",
             "properties": {
-                "cpf": {
-                    "type": "string"
-                },
                 "pass": {
+                    "type": "string",
+                    "format": "string"
+                },
+                "user": {
                     "type": "string",
                     "format": "string"
                 }
