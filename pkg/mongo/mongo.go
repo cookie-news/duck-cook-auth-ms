@@ -2,7 +2,6 @@ package mongo
 
 import (
 	"context"
-	"fmt"
 	"os"
 	"time"
 
@@ -16,13 +15,11 @@ const (
 )
 
 func Connect() mongo.Database {
-	uriConnection := fmt.Sprint(
-		"mongodb://", os.Getenv("MONGO_USER"), ":", os.Getenv("MONGO_PASSWORD"),
-		"@", os.Getenv("MONGO_HOST"), ":", os.Getenv("MONGO_PORT"))
-
+	serverAPI := options.ServerAPI(options.ServerAPIVersion1)
+	opts := options.Client().ApplyURI(os.Getenv("MONGO_SRV")).SetServerAPIOptions(serverAPI)
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
-	mongoClient, err := mongo.Connect(ctx, options.Client().ApplyURI(uriConnection))
+	mongoClient, err := mongo.Connect(ctx, opts)
 	if err != nil {
 		panic(err)
 	}
@@ -41,7 +38,7 @@ func Connect() mongo.Database {
 		panic(err)
 	}
 
-	indexEmail:= mongo.IndexModel{
+	indexEmail := mongo.IndexModel{
 		Keys:    bson.M{"email": 1},
 		Options: options.Index().SetUnique(true),
 	}
