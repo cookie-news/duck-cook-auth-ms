@@ -51,6 +51,7 @@ func (s *Server) Start(addr string) error {
 		auth := v1.Group("/auth")
 		{
 			auth.POST("/login", s.controller.LoginHandler)
+			auth.POST("/verify-jwt", s.controller.VerifyJWTHandler)
 		}
 	}
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))

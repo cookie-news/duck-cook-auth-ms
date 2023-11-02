@@ -2,6 +2,8 @@ package usecase
 
 import (
 	"duck-cook-auth/entity"
+	"errors"
+	"fmt"
 	"os"
 	"time"
 
@@ -12,14 +14,37 @@ import (
 type AuthUseCase interface {
 	Login(pass, hash string) (isValid bool, err error)
 	GenerateJWT(customerInfo entity.CustomerInput) (jwt string, err error)
-	ValidateJWT(jwtstc string) (isValid bool, err error)
+	ValidateJWT(jwtstr string) (err error)
 }
 
 type authUseCaseImpl struct {
 }
 
-func (usecase *authUseCaseImpl) ValidateJWT(jwtstc string) (isValid bool, err error) {
-	return
+var (
+	ErrTokenExpire       = errors.New("token expirado")
+	ErrTokenTokenInvalid = errors.New("token expirado")
+)
+
+func (usecase *authUseCaseImpl) ValidateJWT(jwtstr string) (err error) {
+	var secretKey = []byte(os.Getenv("SECRET_KEY_JWT"))
+	token, err := jwt.ParseWithClaims(jwtstr, &entity.Claims{}, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("método de assinatura inválido")
+		}
+		return secretKey, nil
+	})
+	if err != nil {
+		return err
+	}
+	if claims, ok := token.Claims.(*entity.Claims); ok && token.Valid {
+		now := time.Now()
+		if claims.ExpiresAt.Time.Before(now) {
+			return ErrTokenExpire
+		}
+		return nil
+	}
+
+	return ErrTokenTokenInvalid
 }
 
 func (usecase *authUseCaseImpl) Login(pass, hash string) (isValid bool, err error) {

@@ -2,7 +2,9 @@ package controller
 
 import (
 	"duck-cook-auth/entity"
+	"duck-cook-auth/usecase"
 	"net/http"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 )
@@ -40,4 +42,23 @@ func (c Controller) LoginHandler(ctx *gin.Context) {
 		return
 	}
 	ctx.JSON(http.StatusForbidden, gin.H{"error": "Crendecias erradas"})
+}
+
+func (c Controller) VerifyJWTHandler(ctx *gin.Context) {
+	auth := ctx.GetHeader("authorization")
+	onlyJWT := strings.Split(auth, " ")[1]
+	err := c.authUseCase.ValidateJWT(onlyJWT)
+
+	if err == nil {
+		ctx.String(http.StatusNoContent, "")
+		return
+	}
+	switch err {
+	case usecase.ErrTokenExpire:
+	case usecase.ErrTokenTokenInvalid:
+		ctx.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+
+	default:
+		ctx.JSON(http.StatusForbidden, gin.H{"error": err.Error()})
+	}
 }
