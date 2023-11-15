@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"strconv"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -59,7 +60,11 @@ func CheckPasswordHash(password, hash string) bool {
 
 func (usecase *authUseCaseImpl) GenerateJWT(customerInfo entity.Customer) (jwtstr string, err error) {
 	var secretKey = []byte(os.Getenv("SECRET_KEY_JWT"))
-	expirationTime := time.Now().Add(5 * time.Minute)
+	expirationTimeStr := os.Getenv("TIME_EXPIRE_JWT")
+
+	expirationTimeMinutes, _ := strconv.ParseInt(expirationTimeStr, 10, 64)
+
+	expirationTime := time.Now().Add(time.Duration(expirationTimeMinutes) * time.Minute)
 	claims := &entity.Claims{
 		UserId: customerInfo.ID,
 		RegisteredClaims: jwt.RegisteredClaims{
