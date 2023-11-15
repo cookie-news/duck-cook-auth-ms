@@ -13,7 +13,7 @@ import (
 
 type AuthUseCase interface {
 	Login(pass, hash string) (isValid bool, err error)
-	GenerateJWT(customerInfo entity.CustomerInput) (jwt string, err error)
+	GenerateJWT(customerInfo entity.Customer) (jwt string, err error)
 	ValidateJWT(jwtstr string) (err error)
 }
 
@@ -57,7 +57,7 @@ func CheckPasswordHash(password, hash string) bool {
 	return err == nil
 }
 
-func (usecase *authUseCaseImpl) GenerateJWT(customerInfo entity.CustomerInput) (jwtstr string, err error) {
+func (usecase *authUseCaseImpl) GenerateJWT(customerInfo entity.Customer) (jwtstr string, err error) {
 	var secretKey = []byte(os.Getenv("SECRET_KEY_JWT"))
 	expirationTime := time.Now().Add(5 * time.Minute)
 	claims := &entity.Claims{

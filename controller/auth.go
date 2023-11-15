@@ -34,7 +34,7 @@ func (c Controller) LoginHandler(ctx *gin.Context) {
 		return
 	}
 	if isValid {
-		jwt, err := c.authUseCase.GenerateJWT(customer)
+		jwt, err := c.authUseCase.GenerateJWT(customer.ToCustomer())
 		if err != nil {
 			ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Não foi possivel gerar o JWT"})
 		}

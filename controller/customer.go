@@ -22,16 +22,16 @@ func (c *Controller) CreateCustomerHandler(ctx *gin.Context) {
 		return
 	}
 
-	_, err := c.customerUseCase.CreateCustomer(customer)
+	customerResult, err := c.customerUseCase.CreateCustomer(customer)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	jwt, _ := c.authUseCase.GenerateJWT(customer)
+	jwt, _ := c.authUseCase.GenerateJWT(customerResult)
 
 	ctx.JSON(http.StatusOK, gin.H{
-		"customer": customer.ToCustomer(),
+		"customer": customerResult,
 		"token":    jwt,
 	})
 }
