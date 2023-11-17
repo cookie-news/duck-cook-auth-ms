@@ -29,5 +29,4 @@ networks:
   monitoring-network:
     driver: bridge   
 volumes:
-  cache:  
   mongodb_data:    
