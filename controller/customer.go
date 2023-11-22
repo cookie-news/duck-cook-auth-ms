@@ -30,7 +30,7 @@ func (c *Controller) CreateCustomerHandler(ctx *gin.Context) {
 
 	jwt, _ := c.authUseCase.GenerateJWT(customerResult)
 
-	ctx.JSON(http.StatusOK, gin.H{
+	ctx.JSON(http.StatusCreated, gin.H{
 		"customer": customerResult,
 		"token":    jwt,
 	})
